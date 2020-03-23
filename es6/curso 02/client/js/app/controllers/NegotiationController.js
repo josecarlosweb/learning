@@ -6,25 +6,31 @@ class NegotiationController {
         this._inputDate = $('#date');
         this._inputQuantity = $('#quantity');
         this._inputValue = $('#value');
-        this._listNegotiations = new ListNegotiations();
+
+        this._listNegotiations = new Bind(
+            new ListNegotiations()
+            , new NegotiationsView($('#negotiationsView'))
+            , 'add', 'clear'
+        );
         
-        this._negotiationsView = new NegotiationsView($('#negotiationsView'));
-        this._negotiationsView.update(this._listNegotiations);
+        this._message = new Bind(
+            new Message()
+            , new MessageView($('#messageView'))
+            , 'text'
+        );
         
-        this._message = new Message();
-        this._messageView = new MessageView($('#messageView'));
-        this._messageView.update(this._message);
-        
+    }
+
+    clearAll(){
+        this._listNegotiations.clear();
+        this._message.text = "List negotiations cleaned!"
     }
     
     add(event) {
         
         event.preventDefault();
         this._listNegotiations.add(this._createNegotiate());
-        this._negotiationsView.update(this._listNegotiations);
-        
         this._message.text = 'Negotiation added successful';
-        this._messageView.update(this._message);
         
         this._cleanForm();   
     }
